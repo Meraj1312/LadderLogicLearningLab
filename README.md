@@ -1,6 +1,6 @@
-# Ladder Logic Tutor Lab
+# Ladder Logic Home Lab
 
-An offline-first interactive ladder logic teaching app with four work areas: Learn, Playground, Component Library and Challenges. The simulator is a pure, deterministic JavaScript module with no `eval` and no network dependency.
+An offline-first interactive ladder logic practice app with four work areas: Learn, Playground, Component Library and Challenges. The simulator is a pure, deterministic JavaScript module with no `eval` and no network dependency.
 
 ## Run locally
 
