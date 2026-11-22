@@ -51,3 +51,73 @@ export const challenges=[
  {title:'Tank level sequence',level:'ADVANCED',time:'16 MIN',description:'Use numeric Level, High and HighHigh tags: Pump1 runs below High, Pump2 runs from High up to HighHigh, and both stop at HighHigh.',requirements:['Use Level, High and HighHigh numeric tags','Make Pump1/Pump2 mutually exclusive','Test below, at and above both thresholds'],hint:'Write the requirements as inequalities before building. Check equality at each threshold.',hints:['Write each output rule as an inequality first.','Decide explicitly what happens when level equals a setpoint.','Test values below, at, and above both thresholds; then check that outputs cannot conflict.']},
 ];
 export const starter={tags:{Start:false,Stop:false,Motor:false},inputTags:['Start','Stop'],monitorTags:['Start','Stop','Motor'],rungs:[{id:'R1',elements:[{id:'stop',type:'contact',mode:'nc',tag:'Stop'},{id:'start',type:'contact',mode:'no',tag:'Start'},{id:'motor',type:'coil',mode:'ote',tag:'Motor'}]}]};
+
+export const tankStarter={
+ tags:{
+  Level:30,
+  Low:20,
+  High:80,
+  HighHigh:95,
+  FillStage1:false,
+  FillStage2:false,
+  Pump1:false,
+  Pump2:false
+ },
+ inputTags:['Low','High','HighHigh'],
+ monitorTags:[
+  'Level','Low','High','HighHigh',
+  'FillStage1','FillStage2','Pump1','Pump2'
+ ],
+ rungs:[
+  {
+   id:'R1',
+   elements:[
+    {id:'level-below-low',type:'compare',op:'lt',left:'Level',right:'Low'},
+    {id:'start-fill-stage1',type:'coil',mode:'otl',tag:'FillStage1'}
+   ]
+  },
+  {
+   id:'R2',
+   elements:[
+    {id:'level-at-high',type:'compare',op:'gte',left:'Level',right:'High'},
+    {id:'stop-fill-stage1',type:'coil',mode:'otu',tag:'FillStage1'}
+   ]
+  },
+  {
+   id:'R3',
+   elements:[
+    {id:'level-at-high-stage2',type:'compare',op:'gte',left:'Level',right:'High'},
+    {id:'level-below-highhigh',type:'compare',op:'lt',left:'Level',right:'HighHigh'},
+    {id:'start-fill-stage2',type:'coil',mode:'otl',tag:'FillStage2'}
+   ]
+  },
+  {
+   id:'R4',
+   elements:[
+    {id:'level-at-highhigh',type:'compare',op:'gte',left:'Level',right:'HighHigh'},
+    {id:'stop-fill-stage2-highhigh',type:'coil',mode:'otu',tag:'FillStage2'}
+   ]
+  },
+  {
+   id:'R5',
+   elements:[
+    {id:'level-below-low-reset',type:'compare',op:'lt',left:'Level',right:'Low'},
+    {id:'stop-fill-stage2-low',type:'coil',mode:'otu',tag:'FillStage2'}
+   ]
+  },
+  {
+   id:'R6',
+   elements:[
+    {id:'stage1-pump1',type:'contact',mode:'no',tag:'FillStage1'},
+    {id:'pump1-command',type:'coil',mode:'ote',tag:'Pump1'}
+   ]
+  },
+  {
+   id:'R7',
+   elements:[
+    {id:'stage2-pump2',type:'contact',mode:'no',tag:'FillStage2'},
+    {id:'pump2-command',type:'coil',mode:'ote',tag:'Pump2'}
+   ]
+  }
+ ]
+};
