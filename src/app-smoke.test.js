@@ -11,7 +11,7 @@ globalThis.confirm=()=>true;
 class FakeRoot{
  constructor(){this.nodes=new Map();this.handlers=new Map();}
  addEventListener(name,handler){const current=this.handlers.get(name);this.handlers.set(name,current?event=>{current(event);handler(event);}:handler);}
- querySelector(selector){if(selector==='[data-feedback]'){if(!this.feedbackNode)this.feedbackNode={textContent:'',hidden:true};return this.feedbackNode;}return null;}
+ querySelector(selector){if(selector==='[data-feedback]'){if(!this.feedbackNode)this.feedbackNode={textContent:'',hidden:true};return this.feedbackNode;}if(selector==='[data-project]')return this.querySelectorAll(selector)[0]||null;return null;}
  querySelectorAll(selector){
   if(selector.startsWith('.ladder-row')){
    const rows=[],regex=/<g class="ladder-row(?: rung-selected)?" data-rung="([^"]*)" transform="translate\(0 (\d+)\)">/g;let match;
@@ -86,6 +86,12 @@ test('light and dark theme controls retain accessible labels and theme tokens',a
  click('[data-action]','theme');assert.equal(document.documentElement.dataset.theme,'dark');
  const css=await readFile(new URL('./ui/styles.css',import.meta.url),'utf8'),refresh=css.slice(css.lastIndexOf('/* Top navigation'));assert.match(refresh,/--bg:#202a32/);assert.match(refresh,/:root\[data-theme=light\][^{]*\{color-scheme:light;--bg:#e7eef0/);assert.equal(refresh.match(/--violet:#[a-fA-F0-9]{6}/g).at(-1),'--violet:#327c78');
 });
+test('project switching saves independent circuits and stops the active simulation',()=>{
+ click('[data-tab]','Playground');click('[data-action]','run');const picker=fakeRoot.querySelector('[data-project]');assert.ok(picker);picker.value='tank';picker.onchange();assert.match(fakeRoot.innerHTML,/Water treatment tank/);assert.match(fakeRoot.innerHTML,/Low · 20%/);assert.match(fakeRoot.innerHTML,/High · 80%/);assert.match(fakeRoot.innerHTML,/HighHigh · 95%/);assert.match(fakeRoot.innerHTML,/data-tank-level>30\.0%/);assert.match(fakeRoot.innerHTML,/Drain Closed/);assert.doesNotMatch(fakeRoot.innerHTML,/class="app-shell simulation-running/);assert.ok(store.has('lltl-project-v1'));assert.ok(store.has('lltl-project-tank-v1'));
+ if(!fakeRoot.innerHTML.includes('id="component-panel"'))click('[data-action]','components-panel');click('[data-action]','add-rung');const tankSaved=JSON.parse(store.get('lltl-project-tank-v1'));assert.equal(tankSaved.rungs.length,8);picker.value='motor';picker.onchange();assert.match(fakeRoot.innerHTML,/Motor starter/);assert.doesNotMatch(fakeRoot.innerHTML,/Water treatment tank/);picker.value='tank';picker.onchange();assert.match(fakeRoot.innerHTML,/data-select="level-below-low"/);assert.match(fakeRoot.innerHTML,/data-tank-level>30\.0%/);assert.equal(JSON.parse(store.get('lltl-project-tank-v1')).rungs.length,8);
+ click('[data-action]','reset');assert.match(fakeRoot.innerHTML,/data-tank-level>30\.0%/);const resetTank=JSON.parse(store.get('lltl-project-tank-v1'));assert.equal(resetTank.rungs.length,8,'reset preserves ladder edits');assert.equal(resetTank.tags.FillStage1,false);assert.equal(resetTank.tags.Pump1,false);picker.value='motor';picker.onchange();
+});
+
 test('responsive workspace and reduced-motion styles are present',async()=>{
  const css=await readFile(new URL('./ui/styles.css',import.meta.url),'utf8');
  assert.match(css,/\.playground-layout\{display:grid;grid-template-columns:minmax\(0,1fr\)/);

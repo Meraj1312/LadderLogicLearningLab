@@ -61,12 +61,13 @@ export const tankStarter={
   FillStage1:false,
   FillStage2:false,
   Pump1:false,
-  Pump2:false
+  Pump2:false,
+  DrainOpen:false
  },
- inputTags:['Low','High','HighHigh'],
+ inputTags:['Level','Low','High','HighHigh','DrainOpen'],
  monitorTags:[
   'Level','Low','High','HighHigh',
-  'FillStage1','FillStage2','Pump1','Pump2'
+  'FillStage1','FillStage2','Pump1','Pump2','DrainOpen'
  ],
  rungs:[
   {

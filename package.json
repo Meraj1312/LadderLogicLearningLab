@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "python3 -m http.server 4173 --bind 127.0.0.1",
-    "test": "node src/simulator/scan.test.js && node src/simulator/edit.test.js && node src/simulator/flow.test.js && node src/app-smoke.test.js",
+    "test": "node src/simulator/scan.test.js && node src/simulator/edit.test.js && node src/simulator/flow.test.js && node src/simulator/process.test.js && node src/simulator/projects.test.js && node src/simulator/tank.test.js && node src/app-smoke.test.js",
     "serve": "python3 -m http.server 4173 --bind 127.0.0.1"
   }
 }
