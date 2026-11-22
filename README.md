@@ -30,6 +30,31 @@ The simulator uses a deterministic JavaScript execution engine. It does not use 
 | **Component Library** | Explore available ladder logic components and their behaviour. |
 | **Challenges** | Practice solving problems using ladder logic. |
 
+## Application screenshots
+
+The screenshots below show the main learning areas and the water treatment process simulation.
+
+### Learn
+
+Explore guided lessons, interactive examples, and knowledge checks.
+
+![Learn interface](screenshots/learn-interface.png)
+
+### Playground
+
+Build ladder circuits, run scans, and inspect tag states through the live monitor.
+
+![Playground interface](screenshots/playground-interface.png)
+
+### Water Treatment Tank
+
+Observe the two-stage filling sequence, pump states, tank level thresholds, and ladder-controlled process behaviour.
+
+![Water treatment tank simulation](screenshots/water-tank.png)
+
+---
+
+
 ## Water Treatment Tank Simulation
 
 The project includes a water treatment tank simulation that connects ladder logic with a simple industrial process.
